@@ -1,4 +1,4 @@
-package com.example.appssquaretask.presentation.component
+package com.example.appssquaretask.presentation.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import androidx.annotation.StringRes

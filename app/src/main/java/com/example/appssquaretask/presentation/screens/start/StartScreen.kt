@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.appssquaretask.R
-import com.example.appssquaretask.presentation.component.FilledButton
+import com.example.appssquaretask.presentation.components.FilledButton
 import com.example.appssquaretask.presentation.theme.AppsSquareTaskTheme
 
 @Composable
@@ -31,7 +31,8 @@ fun StartScreen(onExploreClicked: () -> Unit) {
             painter = painterResource(id = R.drawable.start_image),
             contentDescription = stringResource(
                 R.string.start_image
-            ), Modifier.fillMaxSize(),
+            ),
+            modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.FillBounds
         )
         Column(

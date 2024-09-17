@@ -1,4 +1,4 @@
-package com.example.appssquaretask.presentation.component
+package com.example.appssquaretask.presentation.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,7 +16,8 @@ import com.example.appssquaretask.presentation.theme.primary
 
 @Composable
 fun FilledButton(
-    text: String, onClick: () -> Unit, modifier: Modifier = Modifier,
+    text: String, onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     enable: Boolean = true
 ) {
     Button(

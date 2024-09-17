@@ -39,8 +39,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.appssquaretask.R
-import com.example.appssquaretask.presentation.component.FilledButton
-import com.example.appssquaretask.presentation.component.MyTextField
+import com.example.appssquaretask.presentation.components.FilledButton
+import com.example.appssquaretask.presentation.components.MyTextField
 import com.example.appssquaretask.presentation.theme.AppsSquareTaskTheme
 import com.example.appssquaretask.presentation.theme.background
 import com.example.appssquaretask.presentation.theme.onSecondary

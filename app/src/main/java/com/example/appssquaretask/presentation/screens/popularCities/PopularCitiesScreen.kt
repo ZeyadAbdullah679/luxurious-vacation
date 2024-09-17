@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.appssquaretask.R
 import com.example.appssquaretask.data.model.citiesList
-import com.example.appssquaretask.presentation.screens.popularCities.component.CityItem
+import com.example.appssquaretask.presentation.screens.popularCities.components.CityItem
 import com.example.appssquaretask.presentation.theme.AppsSquareTaskTheme
 import com.example.appssquaretask.presentation.theme.background
 import com.example.appssquaretask.presentation.theme.onPrimary
