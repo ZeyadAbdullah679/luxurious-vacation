@@ -1,5 +1,6 @@
 package com.example.appssquaretask.presentation.navigation
 
+import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -32,8 +33,8 @@ fun NavGraph(
                 onSignupClicked = { phoneNumber, password ->
                     navController.navigate("${Screens.Login.name}/$phoneNumber/$password")
                 },
-                onLoginClicked = { navController.navigate("${Screens.Login.name}/${""}/${""}") })
-
+                onLoginClicked = { navController.navigate("${Screens.Login.name}/${""}/${""}") }
+            )
         }
         composable(
             route = "${Screens.Login.name}/{phoneNumber}/{password}",

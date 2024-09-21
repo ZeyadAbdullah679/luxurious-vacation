@@ -1,13 +1,16 @@
 package com.example.appssquaretask.presentation.screens.login
 
-import androidx.lifecycle.ViewModel
 import com.example.appssquaretask.domain.repository.AuthRepository
+import com.example.appssquaretask.presentation.base.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+@HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository
-): ViewModel()  {
+): BaseViewModel<LoginReducer.LoginState, LoginReducer.LoginEvent, LoginReducer.LoginEffect>(
+    LoginReducer.LoginState("", ""),
+    LoginReducer()
+) {
 
-    suspend fun signIn(email: String, password: String) =
-        authRepository.signIn(email, password)
 }

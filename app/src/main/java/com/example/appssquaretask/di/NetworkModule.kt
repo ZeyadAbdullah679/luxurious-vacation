@@ -34,7 +34,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofitService( baseUrl: String, okHttpClient: OkHttpClient): VacationRetrofitService {
+    fun provideRetrofitService(baseUrl: String, okHttpClient: OkHttpClient): VacationRetrofitService {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(okHttpClient)
