@@ -1,6 +1,6 @@
 package com.example.appssquaretask.presentation.screens.signup
 
-import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Checkbox
@@ -23,11 +24,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
@@ -37,7 +38,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.appssquaretask.R
 import com.example.appssquaretask.presentation.components.FilledButton
 import com.example.appssquaretask.presentation.components.MyTextField
@@ -45,16 +47,44 @@ import com.example.appssquaretask.presentation.theme.AppsSquareTaskTheme
 import com.example.appssquaretask.presentation.theme.background
 import com.example.appssquaretask.presentation.theme.onSecondary
 import com.example.appssquaretask.presentation.theme.primary
+import com.example.appssquaretask.presentation.utils.rememberFlowWithLifecycle
 
-@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun SignUpScreen(
+    viewModel: SignUpViewModel = hiltViewModel(),
     onClickBack: () -> Unit,
-    onSignupClicked: (String, String) -> Unit,
-    onLoginClicked: () -> Unit
+    onLoginClick: () -> Unit,
 ) {
-    val signUpViewModel: SignUpViewModel = viewModel()
-    val userData by signUpViewModel.userData.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val effect = rememberFlowWithLifecycle(viewModel.effect)
+    val context = LocalContext.current
+
+    LaunchedEffect(effect) {
+        effect.collect { action ->
+            when (action) {
+                is SignUpReducer.Effect.Error -> {
+                    Toast.makeText(context, action.message, Toast.LENGTH_SHORT).show()
+                }
+
+                SignUpReducer.Effect.NavigateToLogin -> onLoginClick()
+                SignUpReducer.Effect.NavigateToStart -> onClickBack()
+            }
+        }
+    }
+
+    SignUpScreenContent(
+        state = state,
+        onEvent = viewModel::sendEventForEffect,
+        signUp = viewModel::signUp
+    )
+}
+
+@Composable
+private fun SignUpScreenContent(
+    state: SignUpReducer.State,
+    onEvent: (SignUpReducer.Event) -> Unit,
+    signUp: (String, String, String) -> Unit
+) {
     Column(
         modifier = Modifier
             .background(background)
@@ -69,7 +99,8 @@ fun SignUpScreen(
                 .align(Alignment.Start)
         ) {
             IconButton(
-                onClick = onClickBack, modifier = Modifier.padding(vertical = 10.dp)
+                onClick = { onEvent(SignUpReducer.Event.NavigateBackClicked) },
+                modifier = Modifier.padding(vertical = 10.dp)
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -112,32 +143,24 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(14.dp))
 
         MyTextField(
-            value = userData.phoneNumber,
-            onValueChange = { signUpViewModel.setPhoneNumber(it) },
-            label = R.string.phone_number,
-            keyBoardType = KeyboardType.Phone,
-            placeholder = stringResource(R.string.phone_number),
+            value = state.name,
+            onValueChange = { onEvent(SignUpReducer.Event.NameChanged(it)) },
+            label = R.string.name,
+            keyBoardType = KeyboardType.Text,
+            placeholder = stringResource(R.string.name),
         )
         Spacer(modifier = Modifier.height(14.dp))
         MyTextField(
-            value = userData.email,
-            onValueChange = { signUpViewModel.setEmail(it) },
+            value = state.email,
+            onValueChange = { onEvent(SignUpReducer.Event.EmailChanged(it)) },
             label = R.string.email,
             keyBoardType = KeyboardType.Email,
             placeholder = stringResource(R.string.email),
         )
         Spacer(modifier = Modifier.height(14.dp))
         MyTextField(
-            value = userData.city,
-            onValueChange = { signUpViewModel.setCity(it) },
-            label = R.string.city,
-            keyBoardType = KeyboardType.Text,
-            placeholder = stringResource(R.string.city),
-        )
-        Spacer(modifier = Modifier.height(14.dp))
-        MyTextField(
-            value = userData.password,
-            onValueChange = { signUpViewModel.setPassword(it) },
+            value = state.password,
+            onValueChange = { onEvent(SignUpReducer.Event.PasswordChanged(it)) },
             label = R.string.password,
             keyBoardType = KeyboardType.Text,
             placeholder = stringResource(R.string.password),
@@ -149,8 +172,8 @@ fun SignUpScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
-                checked = userData.isAgreeTerms,
-                onCheckedChange = { signUpViewModel.updateTermsState(it) },
+                checked = state.termsAndConditions,
+                onCheckedChange = { onEvent(SignUpReducer.Event.TermsAndConditionsChanged(it)) },
                 colors = CheckboxDefaults.colors(
                     checkedColor = primary,
                     uncheckedColor = primary,
@@ -179,36 +202,39 @@ fun SignUpScreen(
         FilledButton(
             text = stringResource(R.string.sign_up),
             onClick = {
-                if (userData.isAgreeTerms) {
-                    onSignupClicked(userData.phoneNumber, userData.password)
+                if (state.termsAndConditions) {
+                    signUp(state.name, state.email, state.password)
                 }
             },
-            enable = userData.isAgreeTerms,
+            enable = state.termsAndConditions,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
         )
         Spacer(modifier = Modifier.height(14.dp))
 
-        Text(
-            text = buildAnnotatedString {
-                append(stringResource(R.string.have_account))
-                append(" ")
-                withStyle(
-                    style = MaterialTheme.typography.bodyMedium.toSpanStyle().copy(
-                        color = primary, textDecoration = TextDecoration.Underline
-                    ),
-                ) {
-                    append(stringResource(R.string.login))
-
-                }
-            },
-            modifier = Modifier.fillMaxWidth().clickable { onLoginClicked() }, textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color(0xFF91919F)
-        )
-
-
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = stringResource(R.string.have_account),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = stringResource(R.string.login),
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = primary, textDecoration = TextDecoration.Underline
+                ),
+                modifier = Modifier
+                    .clickable { onEvent(SignUpReducer.Event.SignInClicked) },
+            )
+        }
     }
 }
 
@@ -216,6 +242,16 @@ fun SignUpScreen(
 @Composable
 private fun SignUpScreenPreview() {
     AppsSquareTaskTheme {
-        SignUpScreen({}, { _, _ -> }){}
+        SignUpScreenContent(
+            onEvent = {},
+            state = SignUpReducer.State(
+                name = "",
+                email = "",
+                password = "",
+                termsAndConditions = false,
+                isLoading = false
+            ),
+            signUp = { _, _, _ -> }
+        )
     }
 }

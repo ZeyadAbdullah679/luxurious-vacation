@@ -1,40 +1,47 @@
 package com.example.appssquaretask.presentation.screens.signup
 
-import androidx.lifecycle.ViewModel
-import com.example.appssquaretask.presentation.screens.signup.model.UserData
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
+import androidx.lifecycle.viewModelScope
+import com.example.appssquaretask.domain.DataState
+import com.example.appssquaretask.domain.repository.AuthRepository
+import com.example.appssquaretask.presentation.base.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SignUpViewModel : ViewModel() {
+@HiltViewModel
+class SignUpViewModel @Inject constructor(
+    private val authRepository: AuthRepository
+) : BaseViewModel<
+        SignUpReducer.State,
+        SignUpReducer.Event,
+        SignUpReducer.Effect
+        >(
+    initialState = SignUpReducer.initial(),
+    reducer = SignUpReducer()
+) {
+    fun signUp(name: String, email: String, password: String) {
+        viewModelScope.launch(IO) {
+            sendEvent(SignUpReducer.Event.UpdateLoading(true))
+            authRepository.signUp(
+                name = name,
+                email = email,
+                password = password
+            ).collect {
+                when (it) {
+                    is DataState.Empty -> Unit
+                    is DataState.Error -> {
+                        sendEvent(SignUpReducer.Event.UpdateLoading(false))
+                        sendEffect(SignUpReducer.Effect.Error(it.message))
+                    }
 
-    private val _userData: MutableStateFlow<UserData> = MutableStateFlow(UserData())
-    val userData = _userData
-
-    fun setEmail(email: String) {
-        _userData.update {
-            it.copy(email = email)
-        }
-    }
-
-    fun setPassword(password: String) {
-        _userData.update {
-            it.copy(password = password)
-        }
-    }
-
-    fun setPhoneNumber(phoneNumber: String) {
-        _userData.update {
-            it.copy(phoneNumber = phoneNumber)
-        }
-    }
-    fun setCity(city: String) {
-        _userData.update {
-            it.copy(city = city)
-        }
-    }
-    fun updateTermsState(isAgreeTerms: Boolean) {
-        _userData.update {
-            it.copy(isAgreeTerms = isAgreeTerms)
+                    DataState.Loading -> Unit
+                    is DataState.Success -> {
+                        sendEvent(SignUpReducer.Event.UpdateLoading(false))
+                        sendEffect(SignUpReducer.Effect.NavigateToLogin)
+                    }
+                }
+            }
         }
     }
 }

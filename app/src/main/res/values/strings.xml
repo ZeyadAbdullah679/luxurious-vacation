@@ -2,7 +2,7 @@
     <string name="app_name">AppsSquareTask</string>
     <string name="app_logo">App logo</string>
     <string name="city_description">Aspen is as close as one can get to a storybook alpine town in America. The choose-your-own-adventure possibilities—skiing, hiking, dining shopping and  Aspen is as close as one can get to a storybook alpine town in America. The choose-your-own-adventure possibilities—skiing, hiking, dining shopping and  Aspen is as close as one can get to a storybook alpine town in America. The choose-your-own-adventure possibilities—skiing, hiking, dining shopping and  Aspen is as close as one can get to a storybook alpine town in America. The choose-your-own-adventure possibilities—skiing, hiking, dining shopping and ........</string>
-    <string name="popular_cities">Popular Cities</string>
+    <string name="popular_restaurants">Popular Restaurants</string>
     <string name="comming_soon">Comming Soon</string>
     <string name="back">Back</string>
     <string name="navigate_back">navigate back</string>
@@ -23,5 +23,6 @@
     <string name="aspen">Aspen</string>
     <string name="explore">Explore</string>
     <string name="plan_your">Plan your</string>
+    <string name="name">Name</string>
 </resources>
 
