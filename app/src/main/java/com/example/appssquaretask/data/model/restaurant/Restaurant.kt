@@ -1,4 +1,4 @@
-package com.example.appssquaretask.data.model.city
+package com.example.appssquaretask.data.model.restaurant
 
 
 import kotlinx.serialization.SerialName

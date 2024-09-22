@@ -1,4 +1,4 @@
-package com.example.appssquaretask.data.model.city
+package com.example.appssquaretask.data.model.restaurant
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

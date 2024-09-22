@@ -1,8 +1,7 @@
 package com.example.appssquaretask.presentation.screens.popularRestaurant
 
 import androidx.compose.runtime.Immutable
-import com.example.appssquaretask.data.model.city.Restaurant
-import com.example.appssquaretask.data.model.city.Restaurants
+import com.example.appssquaretask.data.model.restaurant.Restaurant
 import com.example.appssquaretask.presentation.base.Reducer
 
 class PopularRestaurantsReducer :

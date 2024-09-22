@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.appssquaretask.R
-import com.example.appssquaretask.data.model.city.Restaurant
+import com.example.appssquaretask.data.model.restaurant.Restaurant
 import com.example.appssquaretask.presentation.theme.AppsSquareTaskTheme
 import com.example.appssquaretask.presentation.theme.onPrimary
 import com.example.appssquaretask.presentation.theme.secondary
@@ -64,7 +64,7 @@ fun RestaurantItem(
                 modifier = Modifier.fillMaxWidth()
             )
             Text(
-                text = "${restaurant.address} Reviews",
+                text = restaurant.address,
                 style = MaterialTheme.typography.labelSmall,
                 textAlign = TextAlign.Center,
                 color = secondary,

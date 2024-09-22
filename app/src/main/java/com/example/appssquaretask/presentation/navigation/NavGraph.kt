@@ -7,8 +7,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.appssquaretask.data.model.city.citiesList
-import com.example.appssquaretask.presentation.screens.cityDetails.CityDetails
+import com.example.appssquaretask.data.model.restaurant.citiesList
+import com.example.appssquaretask.presentation.screens.cityDetails.RestaurantDetails
 import com.example.appssquaretask.presentation.screens.commingSoon.ComingSoonScreen
 import com.example.appssquaretask.presentation.screens.login.LoginScreen
 import com.example.appssquaretask.presentation.screens.popularRestaurant.PopularRestaurantsScreen
@@ -43,17 +43,17 @@ fun NavGraph(
             )
         }
         composable(route = Screens.Home.name) {
-            PopularRestaurantsScreen(onRestaurantClick = { cityIndex ->
-                navController.navigate("${Screens.Details.name}/$cityIndex")
+            PopularRestaurantsScreen(onRestaurantClick = { restaurantId ->
+                navController.navigate("${Screens.Details.name}/$restaurantId")
             })
         }
         composable(
-            route = "${Screens.Details.name}/{cityIndex}",
-            arguments = listOf(navArgument("cityIndex") { type = NavType.IntType })
+            route = "${Screens.Details.name}/{restaurantId}",
+            arguments = listOf(navArgument("restaurantId") { type = NavType.IntType })
         ) { backStackEntry ->
             val cityIndex = backStackEntry.arguments?.getInt("cityIndex")
             val cityData = citiesList[cityIndex ?: 0]
-            CityDetails(cityData = cityData, onBackClicked = { navController.navigateUp() })
+            RestaurantDetails(cityData = cityData, onBackClicked = { navController.navigateUp() })
         }
         composable(route = Screens.ComingSoon.name) {
             ComingSoonScreen(onRefreshClicked = {})

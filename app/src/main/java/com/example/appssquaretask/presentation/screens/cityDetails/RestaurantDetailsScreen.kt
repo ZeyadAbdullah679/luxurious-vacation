@@ -28,8 +28,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.appssquaretask.R
-import com.example.appssquaretask.data.model.city.CityData
+import com.example.appssquaretask.data.model.restaurant.CityData
 import com.example.appssquaretask.presentation.theme.AppsSquareTaskTheme
 import com.example.appssquaretask.presentation.theme.onPrimary
 import com.example.appssquaretask.presentation.theme.primary
@@ -38,7 +39,7 @@ import com.example.appssquaretask.presentation.theme.secondary
 
 @ExperimentalMaterial3Api
 @Composable
-fun CityDetails(
+fun RestaurantDetails(
     cityData: CityData,
     onBackClicked: () -> Unit
 ) {
@@ -130,6 +131,6 @@ private fun CityDetailsPreview() {
             reviewsNum = 355,
             description = R.string.city_description,
         )
-        CityDetails(cityData) {}
+        RestaurantDetails(cityData) {}
     }
 }
