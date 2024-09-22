@@ -2,7 +2,6 @@ package com.example.appssquaretask.data.remote
 
 import com.example.appssquaretask.data.model.auth.SignInResponse
 import com.example.appssquaretask.data.model.auth.SignUpResponse
-import com.example.appssquaretask.data.model.city.Restaurant
 import com.example.appssquaretask.data.model.city.Restaurants
 import retrofit2.Response
 import retrofit2.http.DELETE

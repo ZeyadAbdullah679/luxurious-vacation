@@ -29,7 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.appssquaretask.R
-import com.example.appssquaretask.data.model.CityData
+import com.example.appssquaretask.data.model.city.CityData
 import com.example.appssquaretask.presentation.theme.AppsSquareTaskTheme
 import com.example.appssquaretask.presentation.theme.onPrimary
 import com.example.appssquaretask.presentation.theme.primary

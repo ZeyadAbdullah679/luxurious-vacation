@@ -7,11 +7,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.appssquaretask.data.model.citiesList
+import com.example.appssquaretask.data.model.city.citiesList
 import com.example.appssquaretask.presentation.screens.cityDetails.CityDetails
 import com.example.appssquaretask.presentation.screens.commingSoon.ComingSoonScreen
 import com.example.appssquaretask.presentation.screens.login.LoginScreen
-import com.example.appssquaretask.presentation.screens.popularCities.PopularCitiesScreen
+import com.example.appssquaretask.presentation.screens.popularRestaurant.PopularRestaurantsScreen
 import com.example.appssquaretask.presentation.screens.signup.SignUpScreen
 import com.example.appssquaretask.presentation.screens.start.StartScreen
 
@@ -23,16 +23,15 @@ fun NavGraph(
     NavHost(navController = navController, startDestination = Screens.Start.name) {
         composable(route = Screens.Start.name) {
             StartScreen {
-                navController.navigate(Screens.Signup.name)
+                navController.navigate(Screens.Login.name)
             }
         }
         composable(route = Screens.Signup.name) {
             SignUpScreen(
-                onClickBack = { navController.popBackStack() },
-                onSignupClicked = {
+                onClickBack = { navController.navigateUp() },
+                onLoginClick = {
                     navController.navigate(Screens.Login.name)
                 },
-                onLoginClicked = { navController.navigate(Screens.Login.name) }
             )
         }
         composable(
@@ -44,7 +43,7 @@ fun NavGraph(
             )
         }
         composable(route = Screens.Home.name) {
-            PopularCitiesScreen(onCityClicked = { cityIndex ->
+            PopularRestaurantsScreen(onRestaurantClick = { cityIndex ->
                 navController.navigate("${Screens.Details.name}/$cityIndex")
             })
         }
@@ -54,7 +53,7 @@ fun NavGraph(
         ) { backStackEntry ->
             val cityIndex = backStackEntry.arguments?.getInt("cityIndex")
             val cityData = citiesList[cityIndex ?: 0]
-            CityDetails(cityData = cityData, onBackClicked = { navController.popBackStack() })
+            CityDetails(cityData = cityData, onBackClicked = { navController.navigateUp() })
         }
         composable(route = Screens.ComingSoon.name) {
             ComingSoonScreen(onRefreshClicked = {})

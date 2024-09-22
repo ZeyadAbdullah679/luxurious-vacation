@@ -1,6 +1,5 @@
 package com.example.appssquaretask.presentation.screens.login
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -54,15 +53,15 @@ fun LoginScreen(
     LaunchedEffect(effect) {
         effect.collect { action ->
             when (action) {
-                LoginReducer.LoginEffect.NavigateToHome -> {
+                LoginReducer.Effect.NavigateToHome -> {
                     navigateToHome()
                 }
 
-                LoginReducer.LoginEffect.NavigateToSignUp -> {
+                LoginReducer.Effect.NavigateToSignUp -> {
                     navigateToSignUp()
                 }
 
-                is LoginReducer.LoginEffect.Error -> {
+                is LoginReducer.Effect.Error -> {
                     Toast.makeText(context, action.message, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -78,8 +77,8 @@ fun LoginScreen(
 
 @Composable
 private fun LoginScreenContent(
-    state: LoginReducer.LoginState,
-    onEvent: (LoginReducer.LoginEvent) -> Unit,
+    state: LoginReducer.State,
+    onEvent: (LoginReducer.Event) -> Unit,
     login: (String, String) -> Unit
 ) {
     Column(
@@ -126,16 +125,16 @@ private fun LoginScreenContent(
 
         MyTextField(
             value = state.email,
-            onValueChange = { onEvent(LoginReducer.LoginEvent.EmailChanged(it)) },
+            onValueChange = { onEvent(LoginReducer.Event.EmailChanged(it)) },
             label = R.string.email,
-            keyBoardType = KeyboardType.Phone,
+            keyBoardType = KeyboardType.Email,
             placeholder = stringResource(R.string.email),
         )
 
         Spacer(modifier = Modifier.height(14.dp))
         MyTextField(
             value = state.password,
-            onValueChange = { onEvent(LoginReducer.LoginEvent.PasswordChanged(it)) },
+            onValueChange = { onEvent(LoginReducer.Event.PasswordChanged(it)) },
             label = R.string.password,
             keyBoardType = KeyboardType.Text,
             placeholder = stringResource(R.string.password),
@@ -173,7 +172,7 @@ private fun LoginScreenContent(
                     color = primary, textDecoration = TextDecoration.Underline
                 ),
                 modifier = Modifier
-                    .clickable { onEvent(LoginReducer.LoginEvent.SignUpClicked) },
+                    .clickable { onEvent(LoginReducer.Event.SignUpClicked) },
             )
         }
     }
@@ -185,7 +184,7 @@ private fun LoginScreenContent(
 private fun LoginScreenPreview() {
     AppsSquareTaskTheme {
         LoginScreenContent(
-            state = LoginReducer.LoginState("", "", false),
+            state = LoginReducer.State("", "", false),
             onEvent = {},
             login = { _, _ -> }
         )

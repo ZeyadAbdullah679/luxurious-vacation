@@ -4,55 +4,59 @@ import androidx.compose.runtime.Immutable
 import com.example.appssquaretask.presentation.base.Reducer
 
 class LoginReducer :
-    Reducer<LoginReducer.LoginState, LoginReducer.LoginEvent, LoginReducer.LoginEffect> {
+    Reducer<LoginReducer.State, LoginReducer.Event, LoginReducer.Effect> {
 
     @Immutable
-    sealed class LoginEvent : Reducer.ViewEvent {
-        data class UpdateLoading(val isLoading: Boolean) : LoginEvent()
-        data class EmailChanged(val email: String) : LoginEvent()
-        data class PasswordChanged(val password: String) : LoginEvent()
-        data class SignIn(val email: String, val password: String) : LoginEvent()
-        data object SignUpClicked : LoginEvent()
+    sealed class Event : Reducer.ViewEvent {
+        data class UpdateLoading(val isLoading: Boolean) : Event()
+        data class EmailChanged(val email: String) : Event()
+        data class PasswordChanged(val password: String) : Event()
+        data class SignIn(val email: String, val password: String) : Event()
+        data object SignUpClicked : Event()
     }
 
     @Immutable
-    sealed class LoginEffect : Reducer.ViewEffect {
-        data object NavigateToHome : LoginEffect()
-        data object NavigateToSignUp: LoginEffect()
-        data class Error(val message: String) : LoginEffect()
+    sealed class Effect : Reducer.ViewEffect {
+        data object NavigateToHome : Effect()
+        data object NavigateToSignUp: Effect()
+        data class Error(val message: String) : Effect()
     }
 
     @Immutable
-    data class LoginState(
+    data class State(
         val email: String,
         val password: String,
         val isLoading: Boolean
     ) : Reducer.ViewState
 
     override fun reduce(
-        previousState: LoginState,
-        event: LoginEvent
-    ): Pair<LoginState, LoginEffect?> {
+        previousState: State,
+        event: Event
+    ): Pair<State, Effect?> {
         return when (event) {
-            is LoginEvent.UpdateLoading -> {
+            is Event.UpdateLoading -> {
                 previousState.copy(isLoading = event.isLoading) to null
             }
-            is LoginEvent.EmailChanged -> {
+
+            is Event.EmailChanged -> {
                 previousState.copy(email = event.email) to null
             }
-            is LoginEvent.PasswordChanged -> {
+
+            is Event.PasswordChanged -> {
                 previousState.copy(password = event.password) to null
             }
-            is LoginEvent.SignIn -> {
-                previousState.copy(email = event.email, password = event.password) to LoginEffect.NavigateToHome
+
+            is Event.SignIn -> {
+                previousState.copy(email = event.email, password = event.password) to Effect.NavigateToHome
             }
-            LoginEvent.SignUpClicked -> {
-                previousState to LoginEffect.NavigateToSignUp
+
+            Event.SignUpClicked -> {
+                previousState to Effect.NavigateToSignUp
             }
         }
     }
 
     companion object{
-        fun initial() = LoginState("", "", false)
+        fun initial() = State("", "", false)
     }
 }

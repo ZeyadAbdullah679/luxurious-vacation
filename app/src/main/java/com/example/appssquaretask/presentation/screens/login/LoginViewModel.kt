@@ -13,29 +13,29 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : BaseViewModel<
-        LoginReducer.LoginState,
-        LoginReducer.LoginEvent,
-        LoginReducer.LoginEffect
+        LoginReducer.State,
+        LoginReducer.Event,
+        LoginReducer.Effect
         >(
     initialState = LoginReducer.initial(),
     reducer = LoginReducer()
 ) {
     fun login(email: String, password: String) {
         viewModelScope.launch(IO) {
-            sendEvent(LoginReducer.LoginEvent.UpdateLoading(true))
+            sendEvent(LoginReducer.Event.UpdateLoading(true))
 
             authRepository.signIn(email, password).collect { result ->
                 when (result) {
                     DataState.Empty -> Unit
                     is DataState.Error -> {
-                        sendEvent(LoginReducer.LoginEvent.UpdateLoading(false))
-                        sendEffect(LoginReducer.LoginEffect.Error(result.message))
+                        sendEvent(LoginReducer.Event.UpdateLoading(false))
+                        sendEffect(LoginReducer.Effect.Error(result.message))
                     }
 
                     DataState.Loading -> Unit
                     is DataState.Success -> {
-                        sendEvent(LoginReducer.LoginEvent.UpdateLoading(false))
-                        sendEffect(LoginReducer.LoginEffect.NavigateToHome)
+                        sendEvent(LoginReducer.Event.UpdateLoading(false))
+                        sendEffect(LoginReducer.Effect.NavigateToHome)
                     }
                 }
             }

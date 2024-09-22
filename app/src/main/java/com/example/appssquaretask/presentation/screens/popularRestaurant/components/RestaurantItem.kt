@@ -1,6 +1,5 @@
-package com.example.appssquaretask.presentation.screens.popularCities.components
+package com.example.appssquaretask.presentation.screens.popularRestaurant.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,22 +15,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.appssquaretask.R
-import com.example.appssquaretask.data.model.CityData
+import com.example.appssquaretask.data.model.city.Restaurant
 import com.example.appssquaretask.presentation.theme.AppsSquareTaskTheme
 import com.example.appssquaretask.presentation.theme.onPrimary
 import com.example.appssquaretask.presentation.theme.secondary
 
 
 @Composable
-fun CityItem(
-    cityData: CityData,
-    onCityClicked: () -> Unit
+fun RestaurantItem(
+    restaurant: Restaurant,
+    onRestaurantClicked: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -45,10 +44,10 @@ fun CityItem(
             ),
             modifier = Modifier
                 .padding(14.dp)
-                .clickable { onCityClicked() },
-        ){
-            Image(
-                painter = painterResource(id = cityData.image),
+                .clickable { onRestaurantClicked() },
+        ) {
+            AsyncImage(
+                model = restaurant.image,
                 contentDescription = stringResource(id = R.string.city_image),
                 modifier = Modifier.size(210.dp, 177.dp)
             )
@@ -58,14 +57,14 @@ fun CityItem(
             verticalArrangement = Arrangement.Center,
         ) {
             Text(
-                text = cityData.name,
+                text = restaurant.name,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Start,
                 color = onPrimary,
                 modifier = Modifier.fillMaxWidth()
             )
             Text(
-                text = "${cityData.reviewsNum} Reviews",
+                text = "${restaurant.address} Reviews",
                 style = MaterialTheme.typography.labelSmall,
                 textAlign = TextAlign.Center,
                 color = secondary,
@@ -78,14 +77,18 @@ fun CityItem(
 
 @Preview(showSystemUi = true)
 @Composable
-private fun CityItemPreview() {
+private fun RestaurantItemPreview() {
     AppsSquareTaskTheme {
-        val cityData = CityData(
-            name = "Cairo",
-            reviewsNum = 355,
-            description = R.string.city_description,
-            image = R.drawable.first_img
-        )
-        CityItem(cityData = cityData) {}
+        RestaurantItem(
+            restaurant = Restaurant(
+                name = "Cairo",
+                address = "Cairo, Egypt",
+                image = "https://www.google.com",
+                id = 1,
+                products = emptyList(),
+                restaurantLat = 0.0.toString(),
+                restaurantLong = 0.0.toString()
+            )
+        ) {}
     }
 }

@@ -2,7 +2,9 @@ package com.example.appssquaretask.di
 
 import com.example.appssquaretask.data.remote.VacationRetrofitService
 import com.example.appssquaretask.data.repository.AuthRepositoryImpl
+import com.example.appssquaretask.data.repository.RestaurantRepositoryImpl
 import com.example.appssquaretask.domain.repository.AuthRepository
+import com.example.appssquaretask.domain.repository.RestaurantRepository
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -47,6 +49,12 @@ object NetworkModule {
     @Singleton
     fun provideAuthRepository(retrofitService: VacationRetrofitService): AuthRepository {
         return AuthRepositoryImpl(retrofitService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRestaurantRepository(retrofitService: VacationRetrofitService): RestaurantRepository {
+        return RestaurantRepositoryImpl(retrofitService)
     }
 }
 
