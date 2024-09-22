@@ -135,6 +135,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.50")
     ksp("com.google.dagger:hilt-android-compiler:2.50")
     ksp("androidx.hilt:hilt-compiler:1.2.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("androidx.hilt:hilt-work:1.2.0")
 
     //room
@@ -161,12 +162,6 @@ dependencies {
     //Password meter
     implementation("com.nulab-inc:zxcvbn:1.5.2")
 
-    //Pager
-    implementation("com.google.accompanist:accompanist-pager:0.28.0")
-    implementation("com.google.accompanist:accompanist-pager-indicators:0.28.0")
-
-    //Face Detection And Camera
-    implementation("com.google.mlkit:face-detection:16.1.6")
 
     //Rebugger
     implementation("io.github.theapache64:rebugger:1.0.0-rc03")
@@ -174,11 +169,11 @@ dependencies {
     //LocalDateTime
     implementation("com.jakewharton.threetenabp:threetenabp:1.3.1")
 
-    //    Calender and Time Pickers
+    // Calender and Time Pickers
     implementation("io.github.vanpra.compose-material-dialogs:datetime:0.9.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
-    //    Lottie
+    // Lottie
     implementation("com.airbnb.android:lottie-compose:4.1.0")
 
     // Local unit tests

@@ -1,5 +1,7 @@
 package com.example.appssquaretask.presentation.screens.login
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,10 +18,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -27,6 +30,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.appssquaretask.R
 import com.example.appssquaretask.presentation.components.FilledButton
 import com.example.appssquaretask.presentation.components.MyTextField
@@ -34,22 +39,49 @@ import com.example.appssquaretask.presentation.theme.AppsSquareTaskTheme
 import com.example.appssquaretask.presentation.theme.background
 import com.example.appssquaretask.presentation.theme.onSecondary
 import com.example.appssquaretask.presentation.theme.primary
+import com.example.appssquaretask.presentation.utils.rememberFlowWithLifecycle
 
 @Composable
 fun LoginScreen(
-    onLoginClicked: () -> Unit,
-    userPassword: String,
-    userPhoneNumber: String,
-    onSignupClicked: () -> Unit
+    viewModel: LoginViewModel = hiltViewModel(),
+    navigateToSignUp: () -> Unit,
+    navigateToHome: () -> Unit,
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val effect = rememberFlowWithLifecycle(viewModel.effect)
+    val context = LocalContext.current
 
-    val phoneNumberState = remember {
-        mutableStateOf("")
-    }
-    val passwordState = remember {
-        mutableStateOf("")
+    LaunchedEffect(effect) {
+        effect.collect { action ->
+            when (action) {
+                LoginReducer.LoginEffect.NavigateToHome -> {
+                    navigateToHome()
+                }
+
+                LoginReducer.LoginEffect.NavigateToSignUp -> {
+                    navigateToSignUp()
+                }
+
+                is LoginReducer.LoginEffect.Error -> {
+                    Toast.makeText(context, action.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
+    LoginScreenContent(
+        state = state,
+        onEvent = viewModel::sendEventForEffect,
+        login = viewModel::login
+    )
+}
+
+@Composable
+private fun LoginScreenContent(
+    state: LoginReducer.LoginState,
+    onEvent: (LoginReducer.LoginEvent) -> Unit,
+    login: (String, String) -> Unit
+) {
     Column(
         modifier = Modifier
             .background(background)
@@ -93,8 +125,8 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(14.dp))
 
         MyTextField(
-            value = phoneNumberState.value,
-            onValueChange = { phoneNumberState.value = it },
+            value = state.email,
+            onValueChange = { onEvent(LoginReducer.LoginEvent.EmailChanged(it)) },
             label = R.string.email,
             keyBoardType = KeyboardType.Phone,
             placeholder = stringResource(R.string.email),
@@ -102,8 +134,8 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(14.dp))
         MyTextField(
-            value = passwordState.value,
-            onValueChange = { passwordState.value = it },
+            value = state.password,
+            onValueChange = { onEvent(LoginReducer.LoginEvent.PasswordChanged(it)) },
             label = R.string.password,
             keyBoardType = KeyboardType.Text,
             placeholder = stringResource(R.string.password),
@@ -114,13 +146,7 @@ fun LoginScreen(
 
         FilledButton(
             text = stringResource(R.string.login),
-            onClick = {
-                if (userPhoneNumber == phoneNumberState.value &&
-                    userPassword == passwordState.value
-                ) {
-                    onLoginClicked()
-                }
-            },
+            onClick = { login(state.email, state.password) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
@@ -147,7 +173,7 @@ fun LoginScreen(
                     color = primary, textDecoration = TextDecoration.Underline
                 ),
                 modifier = Modifier
-                    .clickable { onSignupClicked() },
+                    .clickable { onEvent(LoginReducer.LoginEvent.SignUpClicked) },
             )
         }
     }
@@ -158,6 +184,10 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPreview() {
     AppsSquareTaskTheme {
-        LoginScreen({}, "", "") {}
+        LoginScreenContent(
+            state = LoginReducer.LoginState("", "", false),
+            onEvent = {},
+            login = { _, _ -> }
+        )
     }
 }

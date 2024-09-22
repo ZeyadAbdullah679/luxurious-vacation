@@ -1,6 +1,5 @@
 package com.example.appssquaretask.presentation.navigation
 
-import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -30,25 +29,18 @@ fun NavGraph(
         composable(route = Screens.Signup.name) {
             SignUpScreen(
                 onClickBack = { navController.popBackStack() },
-                onSignupClicked = { phoneNumber, password ->
-                    navController.navigate("${Screens.Login.name}/$phoneNumber/$password")
+                onSignupClicked = {
+                    navController.navigate(Screens.Login.name)
                 },
-                onLoginClicked = { navController.navigate("${Screens.Login.name}/${""}/${""}") }
+                onLoginClicked = { navController.navigate(Screens.Login.name) }
             )
         }
         composable(
-            route = "${Screens.Login.name}/{phoneNumber}/{password}",
-            arguments = listOf(
-                navArgument("phoneNumber") { type = NavType.StringType },
-                navArgument("password") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val phoneNumber = backStackEntry.arguments?.getString("phoneNumber")
-            val password = backStackEntry.arguments?.getString("password")
+            route = Screens.Login.name
+        ) {
             LoginScreen(
-                onLoginClicked = { navController.navigate(Screens.Home.name) },
-                userPhoneNumber = phoneNumber ?: "",
-                userPassword = password ?: "",
-                onSignupClicked = { navController.navigate(Screens.Signup.name) }
+                navigateToSignUp = { navController.navigate(Screens.Signup.name) },
+                navigateToHome = { navController.navigate(Screens.Home.name) }
             )
         }
         composable(route = Screens.Home.name) {
@@ -67,6 +59,5 @@ fun NavGraph(
         composable(route = Screens.ComingSoon.name) {
             ComingSoonScreen(onRefreshClicked = {})
         }
-
     }
 }
